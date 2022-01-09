@@ -1,16 +1,35 @@
-# This is a sample Python script.
+import speech_recognition as spr
+import pyttsx3
 
-# Press Mayús+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+def asistente():
+
+    escuchando = spr.Recognizer()
+
+    IA = pyttsx3.init()
+    voices = IA.getProperty('voices')
+    """
+    for voice in voices:
+        print(voice)
+    """
+    IA.setProperty('voice', voices[1].id)
+
+    IA.say("Hi Good morning, What do you need")
+    IA.runAndWait()
+
+    def reconocimiento(instruccion):
+        IA.say(f'You told me you want {instruccion}')
+        IA.runAndWait()
+
+    try:
+        with spr.Microphone() as microfono:
+            print("... Escuchando...")
+            voz = escuchando.listen(microfono)
+            peticion = escuchando.recognize_google(voz)  # Api de google
+            reconocimiento(peticion)
+
+    except:
+        pass
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
-
-
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    asistente()
