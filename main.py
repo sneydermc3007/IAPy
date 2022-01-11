@@ -1,9 +1,12 @@
 import speech_recognition as spr
 import pyttsx3
+import time
+import pywhatkit
+
 
 def asistente():
-
     escuchando = spr.Recognizer()
+    nombre = 'catalina'
 
     IA = pyttsx3.init()
     voices = IA.getProperty('voices')
@@ -20,15 +23,36 @@ def asistente():
         IA.say(f'You told me you want {instruccion}')
         IA.runAndWait()
 
-    try:
-        with spr.Microphone() as microfono:
-            print("... Escuchando...")
-            voz = escuchando.listen(microfono)
-            peticion = escuchando.recognize_google(voz)  # Api de google
+    def escucha():
+        try:
+            with spr.Microphone() as microfono:
+                time.sleep(2)  # Espera en segundos
+                print("... Escuchando...")
+                voz = escuchando.listen(microfono)
+                peticion = escuchando.recognize_google(voz)  # Api de google
+                peticion = peticion.lower()
+                print(peticion)
+
+                if nombre in peticion:
+                    peticion = peticion.replace(nombre, "")
+                    print(peticion)
+
+        except:
+            pass
+
+        return peticion
+
+    def ejecuccion():
+        peticion = escucha()
+        if 'play' in peticion:
+            print("... Reproduciendo...")
             reconocimiento(peticion)
 
-    except:
-        pass
+            peticion = peticion.replace('play', '')
+            time.sleep(4)
+            pywhatkit.playonyt(peticion)
+
+    ejecuccion()
 
 
 if __name__ == '__main__':
