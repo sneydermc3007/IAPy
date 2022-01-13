@@ -2,6 +2,9 @@ import speech_recognition as spr
 import pyttsx3
 import time
 import pywhatkit
+from datetime import datetime
+import wikipedia
+import pyjokes
 
 
 def asistente():
@@ -43,14 +46,76 @@ def asistente():
         return peticion
 
     def ejecuccion():
+        """
+        Todas las acciones que puede hacer la asistente virtual
+        """
         peticion = escucha()
         if 'play' in peticion:
-            print("... Reproduciendo...")
+            print("\n ...Reproduciendo...")
             reconocimiento(peticion)
 
-            peticion = peticion.replace('play', '')
-            time.sleep(4)
+            IA.say("Playing")
+            IA.runAndWait()
+
+            peticion = peticion.replace('play ', '')
+            time.sleep(5)
             pywhatkit.playonyt(peticion)
+
+        elif 'what time is it' in peticion:
+            print("\n ...Hora...")
+            reconocimiento(peticion)
+
+            hora = datetime.now().strftime('%H:%M:%S')
+            print(hora)
+            time.sleep(2.5)
+
+            IA.say(f'The time is {hora}')
+            IA.runAndWait()
+
+        elif 'what day is today' in peticion:
+            print("\n ...Dia...")
+            reconocimiento(peticion)
+
+            fecha = datetime.now().strftime('%Y-%m-%d')
+            print(fecha)
+            time.sleep(2.5)
+
+            IA.say(f'Today is {fecha}')
+            IA.runAndWait()
+
+        elif 'search' in peticion:
+            print("\n ...Buscando...")
+            reconocimiento(peticion)
+
+            IA.say("Searching")
+            IA.runAndWait()
+            time.sleep(1.5)
+
+            peticion = peticion.replace('search ', '')
+            informacion = wikipedia.summary(peticion, 1)
+
+            IA.say(informacion)
+            IA.runAndWait()
+
+        elif 'joke' in peticion:
+            print("\n ...Chiste...")
+            reconocimiento(peticion)
+
+            IA.say("Here I Go")
+            IA.runAndWait()
+
+            print(pyjokes.get_joke(language="es", category="all"))
+
+            time.sleep(2)
+            IA.say(pyjokes.get_joke())
+            IA.runAndWait()
+
+        else:
+            print("\n ...Error...")
+
+            IA.say("Sorry, please repeat the instruction")
+            IA.runAndWait()
+            asistente()
 
     ejecuccion()
 
